@@ -10,6 +10,55 @@ To be able to use Edu Sync with a Moodle instance, the Moodle mobile web service
 This application is written in Rust with a focus on speed.
 Downloads are performed concurrently, which is beneficial when syncing many small files.
 
+## Nix
+This is **not** my project it is a fork from [repo](https://github.com/mkroening/edu-sync).
+I created this fork in order to have this very handy tool available for NixOS.
+
+### Installation
+Since this is not merged into the official Nixpkgs, a custom flake input is needed in your NixOS configuration in order to be installed:
+
+```nix
+# flake.nix
+{
+    inputs = {
+        nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
+        edu-sync-nix = {
+            url = "https://github.com/Marc55s/edu-sync-nix";
+            inputs.nixpkgs.follows = "nixpkgs-unstable";
+        };
+    };
+
+    outputs = inputs@{self,  nixpkgs-unstable, ... }:
+        let
+            system = "x86_64-linux";
+
+            overlay = final: prev: {
+                edu-sync-cli = inputs.edu-sync-nix.packages.${system}.default;
+            };
+
+            pkgs = import nixpkgs {
+                inherit system;
+                overlays = [ overlay ];
+            };
+
+        in {
+            homeConfigurations.my-user = home-manager.lib.homeManagerConfiguration {
+                inherit pkgs;
+                modules = [
+                    {
+                        home.username = "my-user";
+                        home.homeDirectory = "/home/my-user";
+
+                        home.packages = [
+                            pkgs.edu-sync-cli
+                        ];
+                    }
+                ];
+            };
+        };
+}
+```
+
 ## Usage
 
 You can view more detailed help information with:
