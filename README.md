@@ -36,7 +36,7 @@ Since this is not merged into the official Nixpkgs, a custom flake input is need
                 edu-sync-cli = inputs.edu-sync-nix.packages.${system}.default;
             };
 
-            pkgs = import nixpkgs {
+            pkgs = import nixpkgs-unstable {
                 inherit system;
                 overlays = [ overlay ];
             };
