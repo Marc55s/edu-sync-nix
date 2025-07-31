@@ -23,7 +23,7 @@ Since this is not merged into the official Nixpkgs, a custom flake input is need
     inputs = {
         nixpkgs-unstable.url = "nixpkgs/nixos-unstable";
         edu-sync-nix = {
-            url = "https://github.com/Marc55s/edu-sync-nix";
+            url = "github:Marc55s/edu-sync-nix";
             inputs.nixpkgs.follows = "nixpkgs-unstable";
         };
     };
